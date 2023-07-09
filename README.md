@@ -8,3 +8,18 @@
 4. Include all library source files paths.
 5. Set various compilation flags.
 6. Set various linking flags.
+
+### Commands to load program to chip
+```shell
+st -util -1
+```
+
+```shell
+gdb-multiarch demo.elf
+(gdb) target extended-remote :4242
+(gdb) load
+(gdb) break main
+(gdb) break main
+(gdb) break inc
+(gdb) continue 
+```
