@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.0)
 project(blinky)
 
-set(ELF ${PROJECT_NAME}.elf)
+#set(ELF ${PROJECT_NAME}.elf)
 
 enable_language(ASM)
+
 # TODO
 # Get path to STM32 Library from environment variable STM32_LIBROOT
 # If variable not found exit with error
