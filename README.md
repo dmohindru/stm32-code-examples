@@ -11,7 +11,7 @@
 
 ### Commands to load program to chip
 ```shell
-st -util -1
+st-util
 ```
 
 ```shell
