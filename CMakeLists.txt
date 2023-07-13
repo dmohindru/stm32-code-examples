@@ -49,3 +49,4 @@ target_link_libraries(stm32_common_starter stm32_common)
 # All code examples in this project
 add_subdirectory(blinky)
 add_subdirectory(hello-world)
+add_subdirectory(chapter04)
