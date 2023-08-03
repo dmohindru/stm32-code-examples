@@ -1,0 +1,5 @@
+add_subdirectory(ex-5-1-uart-hello)
+#add_subdirectory(ex-5-2-uart-hello-parallel)
+#add_subdirectory(ex-5-3-uart-echo)
+#add_subdirectory(ex-5-4-uart-echo-second)
+#add_subdirectory(ex-5-5-uart-processor)
