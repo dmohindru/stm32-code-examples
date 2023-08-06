@@ -54,7 +54,8 @@ int uart_open(USART_TypeDef *uart_x, uint32_t baud, uint32_t flags) {
 
     } else if (uart_x == USART2) {
         // Provide clock to required peripherals
-        RCC_APB2PeriphClockCmd(RCC_APB1Periph_USART2 | RCC_APB2Periph_AFIO | RCC_APB2Periph_GPIOA, ENABLE);
+        RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO | RCC_APB2Periph_GPIOA, ENABLE);
+        RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
 
         // Initialise tx pin
         setup_usart_gpio(GPIOA,
@@ -78,7 +79,8 @@ int uart_open(USART_TypeDef *uart_x, uint32_t baud, uint32_t flags) {
 
     } else if (uart_x == USART3) {
         // Provide clock to required peripherals
-        RCC_APB2PeriphClockCmd(RCC_APB1Periph_USART3 | RCC_APB2Periph_AFIO | RCC_APB2Periph_GPIOA, ENABLE);
+        RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO | RCC_APB2Periph_GPIOB, ENABLE);
+        RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
 
         // Initialise tx pin
         setup_usart_gpio(GPIOB,
