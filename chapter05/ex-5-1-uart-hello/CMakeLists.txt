@@ -1,4 +1,3 @@
-#add_executable(uart_hello main.c uart.c uart.h)
 add_executable(uart_hello main.c)
 
 include_directories("../uart-lib")
