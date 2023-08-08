@@ -10,3 +10,10 @@
    - Does simple processing like converting received text to upper case
    - Transmit message back to host machine
    - Does string message processing using [picolibc library](https://github.com/picolibc/picolibc)
+6. [UART text command](ex-5-6-uart-text-command): This program received a text command over uart and accordingly turn on and off on board led.
+7. [UART lib](uart-lib): This contains command code required to initialise GPIO and UART subsystem of STM32 blue-pill.
+
+### Notes
+It has been observed that whatever baud rate is set on STM32 half of it is understood by USB TTL device.
+For example: 
+If baud rate at STM32 is set at 9600 then set baud rate at /ttyUSB0 at 4800.

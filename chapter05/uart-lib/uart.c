@@ -1,5 +1,4 @@
 #include "uart.h"
-#include <string.h>
 
 static void setup_usart_gpio(GPIO_TypeDef *gpio_typedef,
                              GPIO_InitTypeDef *gpio_init_struct,
