@@ -1,4 +1,5 @@
 #include "uart.h"
+#include "uart-processor.h"
 
 void Delay(uint32_t nTime);
 
@@ -6,7 +7,6 @@ void Delay(uint32_t nTime);
 int main(void) {
 
     uart_open(USART1, 9600, 0);
-    uart_open(USART2, 19200, 0);
 
     if (SysTick_Config(SystemCoreClock / 1000)) {
         while (1);
@@ -14,7 +14,8 @@ int main(void) {
 
     while (1) {
         int ch = uart_getc(USART1);
-        uart_putc(ch, USART2);
+        int processed_data = process_input(ch);
+        uart_putc(processed_data, USART1);
     }
 }
 
