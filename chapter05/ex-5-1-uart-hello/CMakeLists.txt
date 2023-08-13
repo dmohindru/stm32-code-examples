@@ -1,7 +1,5 @@
 add_executable(uart_hello main.c)
 
-#include_directories("../uart-lib")
-
 target_sources(uart_hello PRIVATE
         ${PERIPH}/src/stm32f10x_gpio.c
         ${PERIPH}/src/stm32f10x_rcc.c
