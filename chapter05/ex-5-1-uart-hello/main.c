@@ -5,7 +5,54 @@ void Delay(uint32_t nTime);
 
 char string_to_send[] = "Hello World!\n\r";
 
+void CLOCK_Init(void)
+{
+
+    RCC_TypeDef * pRCC;
+    pRCC = RCC;
+    RCC_ClocksTypeDef clocks;
+
+    uint32_t cpCFGR;
+
+    uint32_t mask;
+
+    //Setting HSI as system clock
+    cpCFGR = pRCC->CFGR;
+
+
+    // clear the SW1 SW0: Clock Source HSI
+    mask = ~((uint32_t)0b011);
+
+    cpCFGR &= mask;
+
+    pRCC->CFGR = cpCFGR;
+
+    // wait till SWS is 00, that is the clock source is HSI
+    while(1)
+    {
+        cpCFGR = pRCC->CFGR>>2;
+        if((~(cpCFGR) & (uint32_t)0b010) == (uint32_t)0b010) break;
+    }
+
+
+    /* Since the UART2 is connected to APB1 lets configure
+     * the prescaler in a known value, lets say 1
+     * */
+    //change the preescaler of APB1 from 4 to 1
+
+    cpCFGR = pRCC->CFGR;
+
+    mask = ~((uint32_t)0x00001C00); // RCC_CFGR_PPRE1
+
+    cpCFGR &= mask;
+
+    pRCC->CFGR = cpCFGR;
+
+}
+
 int main(void) {
+
+    CLOCK_Init();
     GPIO_InitTypeDef GPIO_InitStructure;
 
     RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOC , ENABLE ); // (1)
@@ -17,7 +64,7 @@ int main(void) {
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz ;
     GPIO_Init(GPIOC , &GPIO_InitStructure);
 
-    uart_open(USART1, 9600, 0);
+    uart_open(USART2, 115200, 0);
 
     if (SysTick_Config(SystemCoreClock / 1000)) {
         while (1);
@@ -25,7 +72,7 @@ int main(void) {
 
     while (1) {
         for (int i = 0; i < strlen(string_to_send); i++) {
-            uart_putc(string_to_send[i], USART1);
+            uart_putc(string_to_send[i], USART2);
         }
 
 
