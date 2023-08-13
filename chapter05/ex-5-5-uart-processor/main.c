@@ -1,4 +1,4 @@
-#include "uart.h"
+#include "uart-config.h"
 #include "uart-processor.h"
 
 void Delay(uint32_t nTime);

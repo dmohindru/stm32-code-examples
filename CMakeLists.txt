@@ -18,7 +18,7 @@ set(PERIPH "${LIBROOT}/Libraries/STM32F10x_StdPeriph_Driver")
 set(PTYPE "STM32F10X_MD_VL")
 set(LDSCRIPT "${CMAKE_CURRENT_LIST_DIR}/stm32f100.ld")
 
-include_directories("${DEVICE}" "${CORE}" "${PERIPH}/inc" ".")
+include_directories("${DEVICE}" "${CORE}" "${PERIPH}/inc" "." "inc")
 
 # Common Interface target for compiler definitions, compiler options and linker options
 add_library(stm32_common INTERFACE)
@@ -51,3 +51,4 @@ add_subdirectory(blinky)
 add_subdirectory(hello-world)
 add_subdirectory(chapter04)
 add_subdirectory(chapter05)
+add_subdirectory(lib)

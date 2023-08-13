@@ -1,4 +1,5 @@
-#include "uart.h"
+#include "rcc-config.h"
+#include "uart-config.h"
 #include <string.h>
 
 void Delay(uint32_t nTime);
@@ -8,6 +9,8 @@ char second_string_to_send[] = "Hello from UART2\n\r";
 
 
 int main(void) {
+
+    clock_init();
 
     uart_open(USART1, 9600, 0);
     uart_open(USART2, 19200, 0);
