@@ -1,4 +1,5 @@
-#include "uart.h"
+#include "uart-config.h"
+#include "rcc-config.h"
 #include <string.h>
 
 void Delay(uint32_t nTime);
@@ -6,6 +7,8 @@ void Delay(uint32_t nTime);
 char string_to_send[] = "Hello World!\n\r";
 
 int main(void) {
+
+    clock_init();
     GPIO_InitTypeDef GPIO_InitStructure;
 
     RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOC , ENABLE ); // (1)
@@ -17,7 +20,7 @@ int main(void) {
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz ;
     GPIO_Init(GPIOC , &GPIO_InitStructure);
 
-    uart_open(USART1, 9600, 0);
+    uart_open(USART2, 115200, 0);
 
     if (SysTick_Config(SystemCoreClock / 1000)) {
         while (1);
@@ -25,7 +28,7 @@ int main(void) {
 
     while (1) {
         for (int i = 0; i < strlen(string_to_send); i++) {
-            uart_putc(string_to_send[i], USART1);
+            uart_putc(string_to_send[i], USART2);
         }
 
 
