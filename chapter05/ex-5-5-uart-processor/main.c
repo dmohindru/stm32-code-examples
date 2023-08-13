@@ -1,10 +1,13 @@
 #include "uart-config.h"
+#include "rcc-config.h"
 #include "uart-processor.h"
 
 void Delay(uint32_t nTime);
 
 
 int main(void) {
+
+    clock_init();
 
     uart_open(USART1, 9600, 0);
 
