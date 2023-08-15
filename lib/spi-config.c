@@ -13,13 +13,43 @@ void spiInit(SPI_TypeDef *SPIx)
     GPIO_StructInit(&GPIO_InitStructure);
     SPI_StructInit(&SPI_InitStructure);
 
-    if (SPIx == SPI2) {
-        /* Enable clocks, configure pins */
-        ...  You need to enable clocks and pins !
-    }  else  {  //  other SPI devices --
+    // Configure GPIO Pins for SPI peripherals
+    if (SPIx == SPI1) {
+        RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1 | RCC_APB2Periph_AFIO | RCC_APB2Periph_GPIOA, ENABLE);
+
+        // SCK and MOSI
+        GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_7;
+        GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+        GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+        // MISO
+        GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
+        GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+        GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+
+    } else if (SPIx == SPI2)  {
+        RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO | RCC_APB2Periph_GPIOB, ENABLE);
+        RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2, ENABLE);
+
+        // SCK and MOSI
+        GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13 | GPIO_Pin_15;
+        GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+        GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+        // MISO
+        GPIO_InitStructure.GPIO_Pin = GPIO_Pin_14;
+        GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+        GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+    } else {
+        //  other SPI devices --
         return;
     }
 
+    // Configure SPI peripherals itself
     SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;
     SPI_InitStructure.SPI_Mode = SPI_Mode_Master;
     SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;
@@ -63,7 +93,28 @@ int spiReadWrite16(SPI_TypeDef* SPIx, uint16_t *rbuf,
     // Set 16 bit transfer mode
     SPI_DataSizeConfig(SPIx, SPI_DataSize_16b);
 
+    SPIx->CR1 = (SPIx->CR1 & ~SPI_BaudRatePrescaler_256) |
+                speeds[speed];
+
+    int i;
+
+    for (i = 0; i < cnt; i++){
+        if (tbuf) {
+            SPI_I2S_SendData(SPIx, *tbuf++);
+        } else {
+            SPI_I2S_SendData(SPIx, 0xffff);
+        }
+        while (SPI_I2S_GetFlagStatus(SPIx, SPI_I2S_FLAG_RXNE) == RESET);
+        if (rbuf) {
+            *rbuf++ = SPI_I2S_ReceiveData(SPIx);
+        } else {
+            SPI_I2S_ReceiveData(SPIx);
+        }
+    }
+
 
     // Restore config for 8 bit transfer mode
     SPI_DataSizeConfig(SPIx, SPI_DataSize_8b);
+
+    return 1;
 }
