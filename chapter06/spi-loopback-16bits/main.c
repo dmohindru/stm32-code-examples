@@ -17,8 +17,6 @@ int main() {
 
     // Test 8 bit transfer
     while(1) {
-        int i = 0;
-
 
         // Test 16 bit transfer
         for (i = 0; i < 8; i++) {

@@ -31,8 +31,6 @@ int main() {
                     //assert_failed(__FILE__, __LINE__);
                 }
             }
-
-            //Delay(250);
         }
 
 
