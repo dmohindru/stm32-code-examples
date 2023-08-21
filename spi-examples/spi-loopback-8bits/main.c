@@ -15,6 +15,11 @@ int main() {
     chip_select_pin_init();
     spiInit(SPI2);
 
+    // Configure SysTick Timer
+    if (SysTick_Config(SystemCoreClock / 1000)) {
+        while (1);
+    }
+
     // Test 8 bit transfer
     while(1) {
 
@@ -33,7 +38,7 @@ int main() {
             }
         }
 
-
+        Delay(250);
     }
 
     return 0;
@@ -68,11 +73,11 @@ void SysTick_Handler (void){
         TimingDelay--;
 }
 
-//#ifdef USE_FULL_ASSERT
-void assert_failed(uint8_t* file , uint32_t line)
+#ifdef USE_FULL_ASSERT
+void assert_failed ( uint8_t * file , uint32_t line)
 {
-    /* Infinite loop */
-    /* Use GDB to find out why we're here */
-    while (1);
+/* Infinite loop */
+/* Use GDB to find out why we're here */
+while (1);
 }
-//#endif
+#endif
