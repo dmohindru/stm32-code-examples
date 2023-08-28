@@ -1,22 +1,22 @@
-/*************************************************** 
+/***************************************************
   This is a library for the Adafruit 1.8" SPI display.
-  This library works with the Adafruit 1.8" TFT Breakout w/SD card  
-  ----> http://www.adafruit.com/products/358  
-  as well as Adafruit raw 1.8" TFT display  
+  This library works with the Adafruit 1.8" TFT Breakout w/SD card
+  ----> http://www.adafruit.com/products/358
+  as well as Adafruit raw 1.8" TFT display
   ----> http://www.adafruit.com/products/618
- 
-  Check out the links above for our tutorials and wiring diagrams 
-  These displays use SPI to communicate, 4 or 5 pins are required to  
-  interface (RST is optional) 
-  Adafruit invests time and resources providing this open source code, 
-  please support Adafruit and open-source hardware by purchasing 
+
+  Check out the links above for our tutorials and wiring diagrams
+  These displays use SPI to communicate, 4 or 5 pins are required to
+  interface (RST is optional)
+  Adafruit invests time and resources providing this open source code,
+  please support Adafruit and open-source hardware by purchasing
   products from Adafruit!
 
-  Written by Limor Fried/Ladyada for Adafruit Industries.  
+  Written by Limor Fried/Ladyada for Adafruit Industries.
   MIT license, all text above must be included in any redistribution
  ****************************************************/
 
-/* 
+/*
  The code contained here is based upon the adafruit driver, but heavily modified
 */
 
@@ -24,9 +24,10 @@
 #include <stm32f10x_rcc.h>
 #include <stm32f10x_gpio.h>
 #include "spi-config.h"
-#include "ST7735.h"
+#include "st7735.h"
 #include "timer.h"
 
+// These variables need to be parameterized
 #define LCD_PORT_BKL  GPIOB
 #define LCD_PORT GPIOB
 #define GPIO_PIN_BKL GPIO_Pin_6

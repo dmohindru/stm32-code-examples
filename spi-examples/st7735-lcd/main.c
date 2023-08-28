@@ -1,5 +1,5 @@
 #include "timer.h"
-#include "ST7735.h"
+#include "st7735.h"
 #include "rcc-config.h"
 #include <stm32f10x.h>
 #include <stm32f10x_rcc.h>
