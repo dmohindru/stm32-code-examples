@@ -4,12 +4,12 @@
 /*  Colors are 565 RGB (5 bits Red, 6 bits green, 5 bits blue) */
 
 #define BLACK           0x0000
-#define BLUE            0x001F
+#define RED             0x001F
 #define GREEN           0x07E0
-#define CYAN            0x07FF
-#define RED             0xF800
-#define MAGENTA         0xF81F       
-#define YELLOW          0xFFE0  
+#define CYAN            0xFFE0
+#define BLUE            0xF800
+#define MAGENTA         0xF81F
+#define YELLOW          0x07FF
 #define WHITE           0xFFFF
 
 #define SPILCD SPI2
@@ -31,5 +31,6 @@ void ST7735_setAddrWindow(uint16_t x0, uint16_t y0,
 void ST7735_pushColor(uint16_t *color, int cnt);
 void ST7735_init();
 void ST7735_backLight(uint8_t on);
+void ST7735_fillScreen(uint16_t color);
 
 #endif

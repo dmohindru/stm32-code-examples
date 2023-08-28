@@ -16,7 +16,7 @@
  RST        PB9             LCD Reset
  DC         PB8             Data/Control Toggle
  CS         PB7             LCD Select
- BLK        PB6             Backlight Control
+ BLK        PB6             Backlight Control (Inverted logic)
  */
 
 int main() {
@@ -27,24 +27,32 @@ int main() {
     // Initialize clock
     //clock_init();
 
-    GPIO_InitTypeDef GPIO_InitStructure;
 
-    // Enable Peripheral Clocks
-    RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOC , ENABLE ); // (1)
-
-    // Configure Pins (2)
-    GPIO_StructInit(&GPIO_InitStructure);
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13 ;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP ;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz ;
-    GPIO_Init(GPIOC , &GPIO_InitStructure);
-
+    ST7735_init();
     while (1) {
-        static int ledval = 0;
-        // toggle led
-        GPIO_WriteBit(GPIOC, GPIO_Pin_13, ( ledval ) ? Bit_SET : Bit_RESET);
-        ledval = 1 - ledval ;
+        ST7735_fillScreen(RED);
+        Delay(1000);
 
-        Delay (250);
+        ST7735_fillScreen(GREEN);
+        Delay(1000);
+
+        ST7735_fillScreen(BLUE);
+        Delay(1000);
+
+        ST7735_fillScreen(YELLOW);
+        Delay(1000);
+
+        ST7735_fillScreen(WHITE);
+        Delay(1000);
+
+        ST7735_fillScreen(BLACK);
+        Delay(1000);
+
+        ST7735_fillScreen(CYAN);
+        Delay(1000);
+
+        ST7735_fillScreen(MAGENTA);
+        Delay(1000);
+
     }
 }
