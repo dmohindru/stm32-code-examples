@@ -60,6 +60,18 @@ struct ST7735_cmdBuf {
     uint8_t data[16];  // parameter data
 };
 
+//typedef struct ST7735_Def {
+//    SPI_TypeDef *spi_x;
+//    GPIO_TypeDef *gpio_port;
+//    uint16_t backlit;
+//    uint16_t reset;
+//    uint16_t chip_select;
+//    uint16_t dc;
+//    uint16_t width;
+//    uint16_t height;
+//
+//} ST7735_Def;
+
 static const struct ST7735_cmdBuf initializers[] = {
         // SWRESET Software reset
         {0x01,          150, 0,  0},
@@ -219,3 +231,145 @@ void ST7735_fillScreen(uint16_t color)
     }
 }
 
+// using struct
+static void lcd_write(struct ST7735_Def *lcd_struct, char dc, const char *data, int nbytes) {
+    GPIO_WriteBit(lcd_struct->gpio_port, lcd_struct->dc, dc);  // dc 1 = data, 0 = control
+    GPIO_ResetBits(lcd_struct->gpio_port, lcd_struct->chip_select);
+    spiReadWrite(lcd_struct->spi_x, 0, data, nbytes, LCDSPEED);
+    GPIO_SetBits(lcd_struct->gpio_port, lcd_struct->chip_select);
+}
+
+static void lcd_write16(struct ST7735_Def *lcd_struct, char dc, const uint16_t *data, int cnt) {
+    GPIO_WriteBit(lcd_struct->gpio_port, lcd_struct->dc, dc);  // dc 1 = data, 0 = control
+    GPIO_ResetBits(lcd_struct->gpio_port, lcd_struct->chip_select);
+    spiReadWrite16(lcd_struct->spi_x, 0, data, cnt, LCDSPEED);
+    GPIO_SetBits(lcd_struct->gpio_port, lcd_struct->chip_select);
+}
+
+static void lcd_write_cmd(struct ST7735_Def *lcd_struct, uint8_t c) {
+    lcd_write(lcd_struct, LCD_C, &c, 1);
+}
+
+void st7735_def_init(struct ST7735_Def *lcd_struct,
+                     SPI_TypeDef *spi_x,
+                     GPIO_TypeDef * gpio_port,
+                     uint16_t backlit,
+                     uint16_t reset,
+                     uint16_t chip_select,
+                     uint16_t dc,
+                     uint16_t width,
+                     uint16_t height) {
+
+    lcd_struct->spi_x = spi_x;
+    lcd_struct->gpio_port = gpio_port;
+    lcd_struct->backlit = backlit;
+    lcd_struct->reset = reset;
+    lcd_struct->chip_select = chip_select;
+    lcd_struct->dc = dc;
+    lcd_struct->width = width;
+    lcd_struct->height = height;
+}
+
+void st7735_lcd_init(struct ST7735_Def *lcd_struct) {
+    GPIO_InitTypeDef GPIO_InitStructure;
+    const struct ST7735_cmdBuf *cmd;
+
+    // set up pins and clocks
+    uint32_t gpio_peripheral;
+    if (lcd_struct->gpio_port == GPIOA) {
+        gpio_peripheral = RCC_APB2Periph_GPIOA;
+    } else if (lcd_struct->gpio_port == GPIOB) {
+        gpio_peripheral = RCC_APB2Periph_GPIOB;
+    } else {
+        gpio_peripheral = RCC_APB2Periph_GPIOC;
+    }
+    RCC_APB2PeriphClockCmd(gpio_peripheral, ENABLE);
+
+    // Setup GPIO
+    GPIO_StructInit(&GPIO_InitStructure);
+    GPIO_InitStructure.GPIO_Pin = lcd_struct->reset | lcd_struct->chip_select | lcd_struct->dc;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(lcd_struct->gpio_port, &GPIO_InitStructure);
+
+    GPIO_InitStructure.GPIO_Pin = lcd_struct->backlit;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(lcd_struct->gpio_port, &GPIO_InitStructure);
+
+    // Initialize SPI
+    spiInit(lcd_struct->spi_x);
+
+    // set cs, reset low
+    GPIO_WriteBit(lcd_struct->gpio_port, lcd_struct->chip_select, HIGH);
+    GPIO_WriteBit(lcd_struct->gpio_port, lcd_struct->reset, HIGH);
+    Delay(10);
+    GPIO_WriteBit(lcd_struct->gpio_port, lcd_struct->reset, LOW);
+    Delay(10);
+    GPIO_WriteBit(lcd_struct->gpio_port, lcd_struct->reset, HIGH);
+    Delay(10);
+
+    // Send initialization commands to ST7735
+
+    for (cmd = initializers; cmd->command; cmd++) {
+        lcd_write(lcd_struct, LCD_C, &(cmd->command), 1);
+        if (cmd->len)
+            lcd_write(lcd_struct, LCD_D, cmd->data, cmd->len);
+        if (cmd->delay)
+            Delay(cmd->delay);
+    }
+
+    // Set backlight on
+    st7735_lcd_back_light(lcd_struct, HIGH);
+
+}
+
+void st7735_lcd_set_addr_window(struct ST7735_Def *lcd_struct, uint16_t x0,
+        uint16_t y0, uint16_t x1,
+        uint16_t y1, uint8_t madctl) {
+    madctl = MADVAL(madctl);
+    if (madctl != madctlcurrent) {
+        lcd_write_cmd(lcd_struct, ST7735_MADCTL);
+        lcd_write(lcd_struct, LCD_D, &madctl, 1);
+        madctlcurrent = madctl;
+    }
+    lcd_write_cmd(lcd_struct, ST7735_CASET);
+    lcd_write16(lcd_struct, LCD_D, &x0, 1);
+    lcd_write16(lcd_struct, LCD_D, &x1, 1);
+
+    lcd_write_cmd(lcd_struct, ST7735_RASET);
+    lcd_write16(lcd_struct, LCD_D, &y0, 1);
+    lcd_write16(lcd_struct, LCD_D, &y1, 1);
+
+    lcd_write_cmd(lcd_struct, ST7735_RAMWR);
+}
+
+void st7735_lcd_back_light(struct ST7735_Def *lcd_struct, uint8_t on) {
+    if (on)
+        GPIO_WriteBit(lcd_struct->gpio_port, lcd_struct->backlit, HIGH);
+    else
+        GPIO_WriteBit(lcd_struct->gpio_port, lcd_struct->backlit, LOW);
+}
+
+void st7735_lcd_push_color(struct ST7735_Def *lcd_struct, uint16_t *color, int cnt) {
+    lcd_write16(lcd_struct, LCD_D, color, cnt);
+}
+
+void st7735_lcd_fill_screen(struct ST7735_Def *lcd_struct, uint16_t color) {
+    uint8_t x, y;
+
+    st7735_lcd_set_addr_window(lcd_struct,
+                               0,
+                               0,
+                               lcd_struct->width - 1,
+                               lcd_struct->height - 1,
+                               MADCTLGRAPHICS);
+
+    for (x = 0; x < lcd_struct->width; x++)
+    {
+        for (y = 0; y < lcd_struct->height; y++)
+        {
+            st7735_lcd_push_color(lcd_struct, &color, 1);
+        }
+    }
+}

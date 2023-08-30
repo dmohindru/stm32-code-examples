@@ -28,30 +28,45 @@ int main() {
     //clock_init();
 
 
-    ST7735_init();
+    //ST7735_init();
+    // Initalize st7735 lcd
+    struct ST7735_Def st7735_Def;
+    st7735_def_init(&st7735_Def,
+                    SPI2,
+                    GPIOB,
+                    GPIO_Pin_6,
+                    GPIO_Pin_9,
+                    GPIO_Pin_7,
+                    GPIO_Pin_8,
+                    128,
+                    160);
+    st7735_lcd_init(&st7735_Def);
+
     while (1) {
-        ST7735_fillScreen(RED);
+        st7735_lcd_fill_screen(&st7735_Def, RED);
+        //ST7735_fillScreen(RED);
         Delay(1000);
 
-        ST7735_fillScreen(GREEN);
+        st7735_lcd_fill_screen(&st7735_Def, GREEN);
+        //ST7735_fillScreen(BLUE);
+        Delay(1000);
+//
+        st7735_lcd_fill_screen(&st7735_Def, BLUE);
         Delay(1000);
 
-        ST7735_fillScreen(BLUE);
+        st7735_lcd_fill_screen(&st7735_Def, YELLOW);
         Delay(1000);
 
-        ST7735_fillScreen(YELLOW);
+        st7735_lcd_fill_screen(&st7735_Def, WHITE);
         Delay(1000);
 
-        ST7735_fillScreen(WHITE);
+        st7735_lcd_fill_screen(&st7735_Def, BLACK);
         Delay(1000);
 
-        ST7735_fillScreen(BLACK);
+        st7735_lcd_fill_screen(&st7735_Def, CYAN);
         Delay(1000);
 
-        ST7735_fillScreen(CYAN);
-        Delay(1000);
-
-        ST7735_fillScreen(MAGENTA);
+        st7735_lcd_fill_screen(&st7735_Def, MAGENTA);
         Delay(1000);
 
     }
