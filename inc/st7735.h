@@ -24,10 +24,6 @@
 #define MADCTLGRAPHICS 0x6
 #define MADCTLBMP      0x2
 
-#define ST7735_width  128
-#define ST7735_height 160
-
-//struct ST7735_Def;
 typedef struct ST7735_Def {
     SPI_TypeDef *spi_x;
     GPIO_TypeDef *gpio_port;
@@ -39,23 +35,6 @@ typedef struct ST7735_Def {
     uint16_t height;
 
 } ST7735_Def;
-
-void ST7735_setAddrWindow(uint16_t x0, uint16_t y0,
-                          uint16_t x1, uint16_t y1, uint8_t madctl);
-void ST7735_pushColor(uint16_t *color, int cnt);
-void ST7735_init();
-void ST7735_backLight(uint8_t on);
-void ST7735_fillScreen(uint16_t color);
-// using struct
-void st7735_def_init(struct ST7735_Def *lcd_struct,
-                     SPI_TypeDef *spi_x,
-                     GPIO_TypeDef * gpio_port,
-                     uint16_t backlit,
-                     uint16_t reset,
-                     uint16_t chip_select,
-                     uint16_t dc,
-                     uint16_t width,
-                     uint16_t height);
 
 void st7735_lcd_init(struct ST7735_Def *lcd_init_struct);
 

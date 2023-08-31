@@ -27,30 +27,27 @@ int main() {
     // Initialize clock
     //clock_init();
 
-
-    //ST7735_init();
     // Initalize st7735 lcd
-    struct ST7735_Def st7735_Def;
-    st7735_def_init(&st7735_Def,
-                    SPI2,
-                    GPIOB,
-                    GPIO_Pin_6,
-                    GPIO_Pin_9,
-                    GPIO_Pin_7,
-                    GPIO_Pin_8,
-                    128,
-                    160);
+    struct ST7735_Def st7735_Def = {
+            .spi_x = SPI2,
+            .gpio_port = GPIOB,
+            .backlit = GPIO_Pin_6,
+            .reset = GPIO_Pin_9,
+            .chip_select = GPIO_Pin_7,
+            .dc = GPIO_Pin_8,
+            .width = 128,
+            .height = 160
+    };
+
     st7735_lcd_init(&st7735_Def);
 
     while (1) {
         st7735_lcd_fill_screen(&st7735_Def, RED);
-        //ST7735_fillScreen(RED);
         Delay(1000);
 
         st7735_lcd_fill_screen(&st7735_Def, GREEN);
-        //ST7735_fillScreen(BLUE);
         Delay(1000);
-//
+
         st7735_lcd_fill_screen(&st7735_Def, BLUE);
         Delay(1000);
 
@@ -68,6 +65,5 @@ int main() {
 
         st7735_lcd_fill_screen(&st7735_Def, MAGENTA);
         Delay(1000);
-
     }
 }
