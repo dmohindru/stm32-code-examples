@@ -9,3 +9,6 @@ target_link_libraries(spi-config PRIVATE stm32_common_starter)
 
 add_library(timer STATIC timer.c)
 target_link_libraries(timer PRIVATE stm32_common_starter)
+
+add_library(st7735 STATIC st7735.c)
+target_link_libraries(st7735 PRIVATE stm32_common_starter)
