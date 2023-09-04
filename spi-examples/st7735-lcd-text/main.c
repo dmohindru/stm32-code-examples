@@ -51,5 +51,7 @@ int main() {
         Delay(1000);
         st7735_draw_char(&st7735_Def, 'D', WHITE, BLACK, 0, 0);
         Delay(1000);
+        st7735_draw_char(&st7735_Def, 'E', WHITE, BLACK, 0, 0);
+        Delay(1000);
     }
 }
