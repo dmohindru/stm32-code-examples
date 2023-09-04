@@ -26,6 +26,7 @@
 #include "spi-config.h"
 #include "st7735.h"
 #include "timer.h"
+#include "glcdfont.h"
 
 #define LCDSPEED SPI_FAST
 
@@ -220,4 +221,62 @@ void st7735_lcd_fill_screen(struct ST7735_Def *lcd_struct, uint16_t color) {
             st7735_lcd_push_color(lcd_struct, &color, 1);
         }
     }
+}
+
+void st7735_draw_char(struct ST7735_Def *lcd_init_struct, char letter,
+        uint16_t letter_color, uint16_t bg_color,
+        uint16_t start_x, uint16_t start_y) {
+
+    //Step 1: determine where we are in the font array
+    uint16_t location_in_font_array = 5*letter; //converts to a number and 5x to get pos. in font array
+
+    //Step 2: set our window - start x,y + room as described in the book
+    //each character is placed in a 10x7 (x is top down, y is left right) rectangle leaving
+    //space between lines (3 pixels) and characters (1 pixel)
+    st7735_lcd_set_addr_window(lcd_init_struct,
+                               start_x,
+                               start_y,
+                               start_x+9,
+                               start_y+6,
+                               MADCTLGRAPHICS);
+
+    //Step 3:
+    //for all 5 bytes that compose the letter
+    for(uint8_t i=0; i<5; i++) //each loop is another defining of a "column" by the 8bit hex value
+    {
+        //get the hex value in font
+        uint8_t font_hex = ASCII[location_in_font_array +i];
+
+        //for each bit in the hex value byte
+        for(uint8_t j=0; j<8; j++)
+        {
+            if(font_hex & 1) //if the last bit is a 1
+            {
+                st7735_lcd_push_color(lcd_init_struct, &letter_color,1); //its part of the letter
+            }
+            else
+            {
+                st7735_lcd_push_color(lcd_init_struct, &bg_color,1); //otherwise, its background.
+            }
+
+            font_hex = font_hex >> 1; //right shift out the used bit
+        }
+
+        // draw line spacing
+        for(uint8_t k=0;k<2;k++) //row 9 and 10 are blank
+        {
+            st7735_lcd_push_color(lcd_init_struct, &bg_color,1);
+        }
+
+
+    }
+    //write same 2 bytes  10 times for the spacing.
+    //Based on M. minkowski's implentation,
+    //I dont trust setting cnt in pushColor to 10
+    //Change loop count to get sanity check for how it writes top-down
+    for(int k = 0; k<10;k++)
+    {
+        st7735_lcd_push_color(lcd_init_struct, &bg_color,1); //write background to the 5th column
+    }
+
 }

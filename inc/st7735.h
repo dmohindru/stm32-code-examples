@@ -51,4 +51,11 @@ void st7735_lcd_back_light(struct ST7735_Def *lcd_init_struct, uint8_t on);
 
 void st7735_lcd_fill_screen(struct ST7735_Def *lcd_init_struct, uint16_t color);
 
+void st7735_draw_char(struct ST7735_Def *lcd_init_struct,
+        char letter,
+        uint16_t letter_color,
+        uint16_t bg_color,
+        uint16_t start_x,
+        uint16_t start_y);
+
 #endif
