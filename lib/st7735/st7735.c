@@ -23,6 +23,7 @@
 #include <stm32f10x.h>
 #include <stm32f10x_rcc.h>
 #include <stm32f10x_gpio.h>
+#include <string.h>
 #include "spi-config.h"
 #include "st7735.h"
 #include "timer.h"
@@ -238,7 +239,7 @@ void st7735_draw_char(struct ST7735_Def *lcd_init_struct, char letter,
                                start_y,
                                start_x+9,
                                start_y+6,
-                               MADCTLGRAPHICS);
+                               MADCTLTEXT);
 
     //Step 3:
     //for all 5 bytes that compose the letter
@@ -271,12 +272,36 @@ void st7735_draw_char(struct ST7735_Def *lcd_init_struct, char letter,
 
     }
     //write same 2 bytes  10 times for the spacing.
-    //Based on M. minkowski's implentation,
-    //I dont trust setting cnt in pushColor to 10
-    //Change loop count to get sanity check for how it writes top-down
     for(int k = 0; k<10;k++)
     {
         st7735_lcd_push_color(lcd_init_struct, &bg_color,1); //write background to the 5th column
     }
 
+}
+
+void st7735_draw_str(struct ST7735_Def *lcd_init_struct,
+                     char *str,
+                     uint16_t letter_color,
+                     uint16_t bg_color,
+                     uint16_t start_x,
+                     uint16_t start_y) {
+
+    // X is top-down, Y is left-right and writes "column by column" visually on the screen
+    // character size: 10x6 x = 10, y = 6
+    uint8_t char_width = 6, char_height = 10;
+    uint16_t  x = start_x, y = start_y;
+    for (int i = 0; i < strlen(str); i++) {
+        if ((y + char_width) > lcd_init_struct->width) {
+            x += char_height;
+            y = start_y;
+        }
+        else {
+            y += char_width;
+        }
+
+        if (x > lcd_init_struct->height)
+            continue; // skip
+
+        st7735_draw_char(lcd_init_struct, str[i], letter_color, bg_color, x, y);
+    }
 }

@@ -42,16 +42,20 @@ int main() {
     st7735_lcd_init(&st7735_Def);
     st7735_lcd_fill_screen(&st7735_Def, RED);
 
+    char phrase[] = "Hello World!";
+//    char phrase[] = "quick brown fox jumps over the lazy dog";
+    st7735_draw_str(&st7735_Def, phrase, WHITE, BLACK, 0, 0);
+
     while (1) {
-        st7735_draw_char(&st7735_Def, 'A', WHITE, BLACK, 0, 0);
-        Delay(1000);
-        st7735_draw_char(&st7735_Def, 'B', WHITE, BLACK, 0, 0);
-        Delay(1000);
-        st7735_draw_char(&st7735_Def, 'C', WHITE, BLACK, 0, 0);
-        Delay(1000);
-        st7735_draw_char(&st7735_Def, 'D', WHITE, BLACK, 0, 0);
-        Delay(1000);
-        st7735_draw_char(&st7735_Def, 'E', WHITE, BLACK, 0, 0);
+//        st7735_draw_char(&st7735_Def, 'A', WHITE, BLACK, 0, 0);
+//        Delay(1000);
+//        st7735_draw_char(&st7735_Def, 'B', WHITE, BLACK, 0, 0);
+//        Delay(1000);
+//        st7735_draw_char(&st7735_Def, 'C', WHITE, BLACK, 0, 0);
+//        Delay(1000);
+//        st7735_draw_char(&st7735_Def, 'D', WHITE, BLACK, 0, 0);
+//        Delay(1000);
+//        st7735_draw_char(&st7735_Def, 'E', WHITE, BLACK, 0, 0);
         Delay(1000);
     }
 }

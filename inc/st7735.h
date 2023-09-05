@@ -22,6 +22,7 @@
  */
 
 #define MADCTLGRAPHICS 0x6
+#define MADCTLTEXT 0x7
 #define MADCTLBMP      0x2
 
 typedef struct ST7735_Def {
@@ -57,5 +58,12 @@ void st7735_draw_char(struct ST7735_Def *lcd_init_struct,
         uint16_t bg_color,
         uint16_t start_x,
         uint16_t start_y);
+
+void st7735_draw_str(struct ST7735_Def *lcd_init_struct,
+                      char *str,
+                      uint16_t letter_color,
+                      uint16_t bg_color,
+                      uint16_t start_x,
+                      uint16_t start_y);
 
 #endif
