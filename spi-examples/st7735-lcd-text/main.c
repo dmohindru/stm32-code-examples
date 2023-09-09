@@ -42,8 +42,8 @@ int main() {
     st7735_lcd_init(&st7735_Def);
     st7735_lcd_fill_screen(&st7735_Def, RED);
 
-    char phrase[] = "Hello World!";
-//    char phrase[] = "quick brown fox jumps over the lazy dog";
+//    char phrase[] = "Hello World!";
+    char phrase[] = "quick brown fox jumps over the lazy dog";
     st7735_draw_str(&st7735_Def, phrase, WHITE, BLACK, 0, 0);
 
     while (1) {

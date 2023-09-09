@@ -44,6 +44,9 @@
 #define ST7735_RAMRD 0x2E
 #define ST7735_COLMOD 0x3A
 
+#define CHAR_WIDTH 6
+#define CHAR_HEIGHT 10
+
 #define MADVAL(x) (((x) << 5) | 8)
 static uint8_t madctlcurrent = MADVAL(MADCTLGRAPHICS);
 
@@ -237,8 +240,8 @@ void st7735_draw_char(struct ST7735_Def *lcd_init_struct, char letter,
     st7735_lcd_set_addr_window(lcd_init_struct,
                                start_x,
                                start_y,
-                               start_x+9,
-                               start_y+6,
+                               start_x+CHAR_HEIGHT-1,
+                               start_y+CHAR_WIDTH,
                                MADCTLTEXT);
 
     //Step 3:
@@ -288,20 +291,21 @@ void st7735_draw_str(struct ST7735_Def *lcd_init_struct,
 
     // X is top-down, Y is left-right and writes "column by column" visually on the screen
     // character size: 10x6 x = 10, y = 6
-    uint8_t char_width = 6, char_height = 10;
-    uint16_t  x = start_x, y = start_y;
+    uint16_t x = (start_x + CHAR_HEIGHT) > lcd_init_struct->height ? 0 : start_x;
+    uint16_t y = (start_y + CHAR_WIDTH) > lcd_init_struct->width ? 0 : start_y;
+
     for (int i = 0; i < strlen(str); i++) {
-        if ((y + char_width) > lcd_init_struct->width) {
-            x += char_height;
+        st7735_draw_char(lcd_init_struct, str[i], letter_color, bg_color, x, y);
+
+        if ((y + CHAR_WIDTH) >= lcd_init_struct->width) {
+            x += CHAR_HEIGHT;
             y = start_y;
         }
         else {
-            y += char_width;
+            y += CHAR_WIDTH;
         }
 
-        if (x > lcd_init_struct->height)
-            continue; // skip
-
-        st7735_draw_char(lcd_init_struct, str[i], letter_color, bg_color, x, y);
+        if ((x + CHAR_HEIGHT) > lcd_init_struct->height)
+            x = 0; // wrap to top row
     }
 }
