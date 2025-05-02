@@ -66,4 +66,18 @@ void st7735_draw_str(struct ST7735_Def *lcd_init_struct,
                       uint16_t start_x,
                       uint16_t start_y);
 
+void st7735_draw_rectangle(struct ST7735_Def *lcd_init_struct,
+        uint16_t start_x, uint16_t start_y,
+        uint16_t end_x, uint16_t end_y,
+        uint16_t color);
+
+void st7735_draw_circle(struct ST7735_Def *lcd_init_struct,
+                           uint16_t centre_x, uint16_t centre_y,
+                           uint16_t radius, uint16_t color);
+
+void st7735_draw_line(struct ST7735_Def *lcd_init_struct,
+                           uint16_t start_x, uint16_t stary_y,
+                           uint16_t end_x, uint16_t end_y,
+                           uint16_t color);
+
 #endif

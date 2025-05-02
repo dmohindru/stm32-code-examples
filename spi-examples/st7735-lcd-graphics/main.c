@@ -1,8 +1,6 @@
 #include "timer.h"
 #include "st7735.h"
-#include "rcc-config.h"
 #include <stm32f10x.h>
-#include <stm32f10x_rcc.h>
 #include <stm32f10x_gpio.h>
 
 /*
@@ -41,10 +39,8 @@ int main() {
 
     st7735_lcd_init(&st7735_Def);
     st7735_lcd_fill_screen(&st7735_Def, RED);
-
-//    char phrase[] = "Hello World!";
-    char phrase[] = "quick brown fox jumps over the lazy dog";
-    st7735_draw_str(&st7735_Def, phrase, WHITE, BLACK, 0, 0);
+    st7735_draw_rectangle(&st7735_Def, 10, 10, 50, 50, BLUE);
+    st7735_draw_rectangle(&st7735_Def, 60, 60, 90, 90, GREEN);
 
     while (1) {
         Delay(1000);

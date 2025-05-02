@@ -309,3 +309,39 @@ void st7735_draw_str(struct ST7735_Def *lcd_init_struct,
             x = 0; // wrap to top row
     }
 }
+
+void st7735_draw_rectangle(struct ST7735_Def *lcd_init_struct,
+                           uint16_t start_x, uint16_t start_y,
+                           uint16_t end_x, uint16_t end_y,
+                           uint16_t color) {
+    uint16_t x, y;
+
+    st7735_lcd_set_addr_window(lcd_init_struct,
+                               start_x,
+                               start_y,
+                               end_x,
+                               end_y,
+                               MADCTLGRAPHICS);
+
+    for (x = start_x; x <= end_x; x++)
+    {
+        for (y = start_y; y <= end_y; y++)
+        {
+            st7735_lcd_push_color(lcd_init_struct, &color, 1);
+        }
+    }
+
+}
+
+void st7735_draw_circle(struct ST7735_Def *lcd_init_struct,
+                        uint16_t centre_x, uint16_t centre_y,
+                        uint16_t radius, uint16_t color) {
+
+}
+
+void st7735_draw_line(struct ST7735_Def *lcd_init_struct,
+                      uint16_t start_x, uint16_t end_x,
+                      uint16_t start_y, uint16_t end_y,
+                      uint16_t color) {
+
+}
