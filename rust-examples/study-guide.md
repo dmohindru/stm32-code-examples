@@ -63,4 +63,8 @@ Use the [**Discovery Book**](https://docs.rust-embedded.org/discovery/) to build
 
 ---
 
+## Links
+
+- [Quick starter link for any board](https://docs.rust-embedded.org/cortex-m-quickstart/cortex_m_quickstart/)
+
 Happy hacking with Embedded Rust 🚀🦀
